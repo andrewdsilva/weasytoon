@@ -1,32 +1,56 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
-void main() => runApp(MyApp());
+void main() => runApp(Weasytoon());
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class Weasytoon extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
+    final blue   = Color(0xFF22b3EE);
+    final greyBg = Color(0xFFF3F5F7);
+
+    final MaterialColor mainBlue = const MaterialColor(
+      0xFF22b3EE,
+      const <int, Color>{
+        50: const Color.fromRGBO(34, 179, 238, .1),
+        100: const Color.fromRGBO(34, 179, 238, .2),
+        200: const Color.fromRGBO(34, 179, 238, .3),
+        300: const Color.fromRGBO(34, 179, 238, .4),
+        400: const Color.fromRGBO(34, 179, 238, .5),
+        500: const Color.fromRGBO(34, 179, 238, .6),
+        600: const Color.fromRGBO(34, 179, 238, .7),
+        700: const Color.fromRGBO(34, 179, 238, .8),
+        800: const Color.fromRGBO(34, 179, 238, .9),
+        900: const Color.fromRGBO(34, 179, 238, 1),
+      },
+    );
+
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'WeasyToon',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: blue,
+        primarySwatch: mainBlue,
+        scaffoldBackgroundColor: greyBg,
       ),
-      home: MyHomePage(title: 'WeasyToon'),
+      home: AnimationsPage(title: 'WeasyToon'),
     );
   }
+
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class AnimationsPage extends StatefulWidget {
+
+  AnimationsPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _AnimationsPageState createState() => _AnimationsPageState();
+
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _AnimationsPageState extends State<AnimationsPage> {
 
   final _offsets = <Offset>[];
 
@@ -62,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         child: Center(
           child: CustomPaint(
-            painter: FlipBookPainter(this._offsets),
+            painter: AnimationsPainter(this._offsets),
             child: Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
@@ -75,18 +99,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
 }
 
-class FlipBookPainter extends CustomPainter {
+class AnimationsPainter extends CustomPainter {
 
   final offsets;
 
-  FlipBookPainter(this.offsets): super();
+  AnimationsPainter(this.offsets): super();
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
     ..color = Colors.black
     ..isAntiAlias = true
-    ..strokeWidth = 3.0;
+    ..strokeWidth = 3.0
+    ..strokeCap = StrokeCap.round;
 
     for (var i = 0; i < offsets.length - 1; i++) {
       if (offsets[i] != null && offsets[i + 1] != null) {
