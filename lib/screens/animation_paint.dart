@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 
 import 'animation_painter.dart';
+import '../services/animation_service.dart';
 
 class AnimationPaint extends StatefulWidget {
 
@@ -13,17 +14,16 @@ class AnimationPaint extends StatefulWidget {
 }
 
 class _AnimationPaintState extends State<AnimationPaint> {
-  final _offsets = <Offset>[];
 
   void addPoint(context, details) {
     final renderObject = context.findRenderObject() as RenderBox;
     final position     = renderObject.globalToLocal(details.globalPosition);
 
-    _offsets.add(position);
+    servAnimation.currentFrame.offsets.add(position);
   }
 
   void addNullPoint() {
-    _offsets.add(null);
+    servAnimation.currentFrame.offsets.add(null);
   }
 
   @override
@@ -48,7 +48,7 @@ class _AnimationPaintState extends State<AnimationPaint> {
         },
         child: Center(
           child: CustomPaint(
-            painter: AnimationPainter(this._offsets),
+            painter: AnimationPainter(servAnimation.currentFrame, 1),
             child: Container(
               height: MediaQuery.of(context).size.height * 0.75,
               width: MediaQuery.of(context).size.width,

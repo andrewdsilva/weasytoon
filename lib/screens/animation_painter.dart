@@ -1,34 +1,48 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
+import '../models/frame.dart';
+import '../services/animation_service.dart';
+
 class AnimationPainter extends CustomPainter {
 
-  final offsets;
+  Frame frame;
+  double proportion = 1;
 
-  AnimationPainter(this.offsets): super();
+  AnimationPainter(this.frame, this.proportion): super();
+
+  Offset adaptOffset(Offset o) {
+    return o.scale(this.proportion, this.proportion);
+  }
+
+  double getStrokeWidth() {
+    return 3.0 * this.proportion;
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
     ..color = Colors.black
     ..isAntiAlias = true
-    ..strokeWidth = 3.0
+    ..strokeWidth = this.getStrokeWidth()
     ..strokeCap = StrokeCap.round;
 
     var rect = Offset.zero & size;
     canvas.clipRect(rect);
 
+    var offsets = frame.offsets;
+
     for (var i = 0; i < offsets.length - 1; i++) {
       if (offsets[i] != null && offsets[i + 1] != null) {
         canvas.drawLine(
-          offsets[i],
-          offsets[i + 1],
+          this.adaptOffset(offsets[i]),
+          this.adaptOffset(offsets[i + 1]),
           paint
         );
       } else if (offsets[i] != null && offsets[i + 1] == null) {
         canvas.drawPoints(
           PointMode.points,
-          [offsets[i]],
+          [this.adaptOffset(offsets[i])],
           paint
         );
       }

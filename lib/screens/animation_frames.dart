@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 
 import 'animation_painter.dart';
+import '../services/animation_service.dart';
+import '../models/frame.dart';
 
 class AnimationFrames extends StatefulWidget {
 
@@ -14,18 +16,21 @@ class AnimationFrames extends StatefulWidget {
 
 class _AnimationFramesState extends State<AnimationFrames> {
 
-  double getItemWidth() {
-    var frameWidth  = MediaQuery.of(context).size.width;
+  double getProportion() {
     var frameHeight = MediaQuery.of(context).size.height * 0.75;
     var itemHeight  = MediaQuery.of(context).size.height * 0.1;
 
-    var itemWidth = frameWidth * itemHeight / frameHeight;
-
-    return itemWidth;
+    return itemHeight / frameHeight;
   }
 
-  Color getFrameBackground(int index) {
-    if (index == 0) {
+  double getItemWidth() {
+    var frameWidth  = MediaQuery.of(context).size.width;
+
+    return frameWidth * this.getProportion();
+  }
+
+  Color getFrameBackground(Frame frame) {
+    if (frame == servAnimation.currentFrame) {
       return Theme.of(context).primaryColorLight;
     } else {
       return Colors.white;
@@ -34,7 +39,7 @@ class _AnimationFramesState extends State<AnimationFrames> {
 
   @override
   Widget build(BuildContext context) {
-    var items = [1, 2, 3, 4];
+    var frames = servAnimation.currentAnimation.frames;
 
     return Container(
       child: Row(
@@ -44,28 +49,38 @@ class _AnimationFramesState extends State<AnimationFrames> {
               physics: ClampingScrollPhysics(),
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              itemCount: items.length,
+              itemCount: frames.length,
               itemBuilder: (BuildContext context, int index) {
-                final item = items[index];
+                var frame = frames[index];
 
                 return SizedBox(
                   width: getItemWidth(),
-                  child: Card(
-                    child: CustomPaint(
-                      painter: AnimationPainter([Offset(0,0), Offset(15,20)]),
+                  child: InkWell(
+                    onTap: () {
+                      servAnimation.selectFrame(frame);
+                    },
+                    child: Card(
+                      child: CustomPaint(
+                        painter: AnimationPainter(frame, this.getProportion()),
+                      ),
+                      color: this.getFrameBackground(frame),
                     ),
-                    color: this.getFrameBackground(index),
                   ),
                 );
               },
             ),
           ),
-          Card(
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Center(child: Text('+', style: TextStyle(color: Colors.white))),
+          InkWell(
+            onTap: () {
+              servAnimation.newFrame();
+            },
+            child: Card(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Center(child: Text('+', style: TextStyle(color: Colors.white))),
+              ),
+              color: Theme.of(context).primaryColor,
             ),
-            color: Theme.of(context).primaryColor,
           ),
         ],
       ),
