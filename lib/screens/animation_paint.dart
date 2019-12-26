@@ -4,6 +4,8 @@ import 'dart:ui';
 import 'animation_painter.dart';
 import '../services/animation_service.dart';
 
+import 'dart:async';
+
 class AnimationPaint extends StatefulWidget {
 
   AnimationPaint() : super();
@@ -15,6 +17,8 @@ class AnimationPaint extends StatefulWidget {
 
 class _AnimationPaintState extends State<AnimationPaint> {
 
+  StreamSubscription<int> stateSubscription;
+
   void addPoint(context, details) {
     final renderObject = context.findRenderObject() as RenderBox;
     final position     = renderObject.globalToLocal(details.globalPosition);
@@ -24,6 +28,16 @@ class _AnimationPaintState extends State<AnimationPaint> {
 
   void addNullPoint() {
     servAnimation.currentFrame.offsets.add(null);
+  }
+
+  void _onChange(int state) {
+    this.setState(() {});
+  }
+
+  @override
+  void initState() {
+    stateSubscription = servAnimation.stateObservable.listen(_onChange);
+    super.initState();
   }
 
   @override
@@ -48,7 +62,7 @@ class _AnimationPaintState extends State<AnimationPaint> {
         },
         child: Center(
           child: CustomPaint(
-            painter: AnimationPainter(servAnimation.currentFrame, 1),
+            painter: AnimationPainter(servAnimation.currentFrame, 1, true),
             child: Container(
               height: MediaQuery.of(context).size.height * 0.75,
               width: MediaQuery.of(context).size.width,

@@ -5,6 +5,8 @@ import 'animation_painter.dart';
 import '../services/animation_service.dart';
 import '../models/frame.dart';
 
+import 'dart:async';
+
 class AnimationFrames extends StatefulWidget {
 
   AnimationFrames() : super();
@@ -15,6 +17,10 @@ class AnimationFrames extends StatefulWidget {
 }
 
 class _AnimationFramesState extends State<AnimationFrames> {
+
+  StreamSubscription<int> stateSubscription;
+
+  ScrollController _scrollController;
 
   double getProportion() {
     var frameHeight = MediaQuery.of(context).size.height * 0.75;
@@ -37,6 +43,26 @@ class _AnimationFramesState extends State<AnimationFrames> {
     }
   }
 
+  void _onChange(int state) {
+    this.setState(() {});
+  }
+
+  void scrollToTheEnd() {
+    this._scrollController.animateTo(
+      this._scrollController.offset + getItemWidth() * servAnimation.currentAnimation.frames.length,
+      curve: Curves.linear,
+      duration: Duration (milliseconds: 500)
+    );
+  }
+
+  @override
+  void initState() {
+    stateSubscription = servAnimation.stateObservable.listen(_onChange);
+    _scrollController = ScrollController();
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var frames = servAnimation.currentAnimation.frames;
@@ -46,6 +72,7 @@ class _AnimationFramesState extends State<AnimationFrames> {
         children: <Widget>[
           Expanded(
             child: ListView.builder(
+              controller: _scrollController,
               physics: ClampingScrollPhysics(),
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
@@ -61,7 +88,7 @@ class _AnimationFramesState extends State<AnimationFrames> {
                     },
                     child: Card(
                       child: CustomPaint(
-                        painter: AnimationPainter(frame, this.getProportion()),
+                        painter: AnimationPainter(frame, this.getProportion(), false),
                       ),
                       color: this.getFrameBackground(frame),
                     ),
@@ -73,6 +100,8 @@ class _AnimationFramesState extends State<AnimationFrames> {
           InkWell(
             onTap: () {
               servAnimation.newFrame();
+
+              this.scrollToTheEnd();
             },
             child: Card(
               child: Padding(

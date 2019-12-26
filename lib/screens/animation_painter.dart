@@ -4,12 +4,24 @@ import 'dart:ui';
 import '../models/frame.dart';
 import '../services/animation_service.dart';
 
+import 'dart:async';
+
 class AnimationPainter extends CustomPainter {
+
+  StreamSubscription<int> stateSubscription;
 
   Frame frame;
   double proportion = 1;
+  bool onion        = true;
 
-  AnimationPainter(this.frame, this.proportion): super();
+  AnimationPainter(Frame frame, double proportion, bool onion) :
+    this.frame        = frame,
+    this.proportion   = proportion,
+    this.onion        = onion,
+    stateSubscription = servAnimation.stateObservable.listen((int state) {
+      // On change
+    }),
+    super();
 
   Offset adaptOffset(Offset o) {
     return o.scale(this.proportion, this.proportion);
@@ -19,19 +31,7 @@ class AnimationPainter extends CustomPainter {
     return 3.0 * this.proportion;
   }
 
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-    ..color = Colors.black
-    ..isAntiAlias = true
-    ..strokeWidth = this.getStrokeWidth()
-    ..strokeCap = StrokeCap.round;
-
-    var rect = Offset.zero & size;
-    canvas.clipRect(rect);
-
-    var offsets = frame.offsets;
-
+  void drawOffsets(canvas, offsets, paint) {
     for (var i = 0; i < offsets.length - 1; i++) {
       if (offsets[i] != null && offsets[i + 1] != null) {
         canvas.drawLine(
@@ -47,6 +47,27 @@ class AnimationPainter extends CustomPainter {
         );
       }
     }
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+    ..color = Colors.grey
+    ..isAntiAlias = true
+    ..strokeWidth = this.getStrokeWidth()
+    ..strokeCap = StrokeCap.round;
+
+    var rect = Offset.zero & size;
+    canvas.clipRect(rect);
+
+    var pf = servAnimation.getPreviousFrame();
+
+    if (this.onion && pf != null) {
+      this.drawOffsets(canvas, pf.offsets, paint);
+    }
+
+    paint.color = Colors.black;
+    this.drawOffsets(canvas, this.frame.offsets, paint);
   }
 
   @override
