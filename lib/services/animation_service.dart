@@ -3,6 +3,8 @@ import '../models/frame.dart';
 
 import 'package:rxdart/rxdart.dart';
 
+import 'dart:async';
+
 class AnimationService {
 
   List<Animation> animations = [];
@@ -10,8 +12,12 @@ class AnimationService {
   Animation currentAnimation = null;
   Frame currentFrame         = null;
 
+  bool playing               = false;
+
   BehaviorSubject<int> _state = BehaviorSubject<int>.seeded(-1);
   Stream<int> get stateObservable => _state.stream;
+
+  Timer timer;
 
   AnimationService() {
     this.loadData();
@@ -70,6 +76,24 @@ class AnimationService {
     } else {
       return null;
     }
+  }
+
+  void nextFrame() {
+    var newIndex = (this.getCurrentFrameIndex() + 1) % this.currentAnimation.frames.length;
+
+    this.currentFrame = this.currentAnimation.frames[newIndex];
+
+    this.change();
+  }
+
+  void play() {
+    var ms = 1 / this.currentAnimation.fps * 1000;
+
+    timer = Timer.periodic(Duration(milliseconds: ms.round()), (Timer t) => nextFrame());
+  }
+
+  void stop() {
+    timer?.cancel();
   }
 
 }

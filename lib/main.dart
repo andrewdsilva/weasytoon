@@ -42,13 +42,7 @@ class Weasytoon extends StatelessWidget {
         ),
         scaffoldBackgroundColor: greyBg,
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Animation'),
-          elevation: 0.0,
-        ),
-        body: AnimationPage(),
-      ),
+      home: AnimationPage(),
     );
   }
 
