@@ -1,5 +1,6 @@
 import '../models/animation.dart';
 import '../models/frame.dart';
+import 'database_service.dart';
 
 import 'package:rxdart/rxdart.dart';
 
@@ -24,7 +25,11 @@ class AnimationService {
     this.initDefaultValues();
   }
 
-  void loadData() {}
+  void loadData() async {
+    var data = await servDatabase.select("animations");
+
+    print(data);
+  }
 
   void initDefaultValues() {
     // No animation
@@ -58,6 +63,8 @@ class AnimationService {
 
   void change() {
     _state.add(1);
+
+    this.currentAnimation.save();
   }
 
   int getCurrentFrameIndex() {
