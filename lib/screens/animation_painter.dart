@@ -62,12 +62,13 @@ class AnimationPainter extends CustomPainter {
 
     var pf = servAnimation.getPreviousFrame();
 
-    if (this.onion && pf != null) {
+    if (this.onion && !servAnimation.playing && pf != null) {
       this.drawOffsets(canvas, pf.offsets, paint);
     }
 
     paint.color = Colors.black;
-    this.drawOffsets(canvas, this.frame.offsets, paint);
+    var offsets = this.frame != null ? this.frame.offsets : [];
+    this.drawOffsets(canvas, offsets, paint);
   }
 
   @override

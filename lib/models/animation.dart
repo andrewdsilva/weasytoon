@@ -30,6 +30,18 @@ class Animation {
     };
   }
 
+  void initWithValues(Map<String, dynamic> values) {
+    this.id     = values['id'];
+    this.name   = values['name'];
+    this.fps    = values['fps'];
+    this.frames = values['frames'].map((i) {
+      var f = Frame();
+      f.initWithValues(i);
+
+      return f;
+    }).toList().cast<Frame>();
+  }
+
   void save() {
     servDatabase.insert(this.table, this);
   }

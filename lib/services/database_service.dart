@@ -24,6 +24,9 @@ class DatabaseService {
       },
       version: 1,
     );
+
+    // final Database db = await database;
+    // await db.rawDelete('DELETE FROM animations');
   }
 
   void insert(table, model) async {

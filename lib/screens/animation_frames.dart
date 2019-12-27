@@ -65,7 +65,7 @@ class _AnimationFramesState extends State<AnimationFrames> {
 
   @override
   Widget build(BuildContext context) {
-    var frames = servAnimation.currentAnimation.frames;
+    var frames = servAnimation.currentAnimation != null ? servAnimation.currentAnimation.frames : [];
 
     return Container(
       child: Row(

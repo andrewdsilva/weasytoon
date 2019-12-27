@@ -5,6 +5,7 @@ import 'database_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'dart:async';
+import 'dart:convert';
 
 class AnimationService {
 
@@ -22,13 +23,27 @@ class AnimationService {
 
   AnimationService() {
     this.loadData();
-    this.initDefaultValues();
   }
 
   void loadData() async {
+    print("Loading data...");
+
     var data = await servDatabase.select("animations");
 
-    print(data);
+    this.animations = List.generate(data.length, (i) {
+      var json = jsonDecode(data[i]['data']);
+      var a    = Animation(json['name']);
+
+      a.initWithValues(json);
+
+      return a;
+    });
+
+    print("${this.animations.length} animations loaded.");
+
+    this.initDefaultValues();
+
+    this.change();
   }
 
   void initDefaultValues() {
@@ -53,21 +68,23 @@ class AnimationService {
     this.currentFrame = this.currentAnimation.frames.last;
 
     this.change();
+    this.currentAnimation.save();
   }
 
   void selectFrame(Frame frame) {
     this.currentFrame = frame;
 
     this.change();
+    this.currentAnimation.save();
   }
 
   void change() {
     _state.add(1);
-
-    this.currentAnimation.save();
   }
 
   int getCurrentFrameIndex() {
+    if (this.currentAnimation == null) return null;
+
     for (var i = 0; i < this.currentAnimation.frames.length; i++) {
       if (this.currentAnimation.frames[i] == this.currentFrame) {
         return i;
@@ -78,7 +95,7 @@ class AnimationService {
   Frame getPreviousFrame() {
     var index = this.getCurrentFrameIndex();
 
-    if (index > 0) {
+    if (index != null && index > 0) {
       return this.currentAnimation.frames[index - 1];
     } else {
       return null;
@@ -94,6 +111,8 @@ class AnimationService {
   }
 
   void play() {
+    this.currentAnimation.save();
+
     var ms = 1 / this.currentAnimation.fps * 1000;
 
     timer = Timer.periodic(Duration(milliseconds: ms.round()), (Timer t) => nextFrame());

@@ -19,4 +19,10 @@ class Frame {
     };
   }
 
+  void initWithValues(Map<String, dynamic> data) {
+    this.offsets = data['offsets'].map((i) {
+      return i == null ? null : Offset(i['x'], i['y']);
+    }).toList().cast<Offset>();
+  }
+
 }
