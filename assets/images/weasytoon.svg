@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 213.27897 36.380209"
+   height="137.5"
+   width="806.09375">
+  <defs
+     id="defs2" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-25.142134,-253.11769)"
+     id="layer1">
+    <flowRoot
+       transform="matrix(0.26458333,0,0,0.26458333,0,235.08743)"
+       style="font-style:normal;font-weight:normal;font-size:96px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       id="flowRoot10"
+       xml:space="preserve"><flowRegion
+         style="font-size:96px;text-align:center;text-anchor:middle"
+         id="flowRegion12"><rect
+           style="font-size:96px;text-align:center;text-anchor:middle"
+           y="32.314678"
+           x="0"
+           height="216.17265"
+           width="1000.051"
+           id="rect14" /></flowRegion><flowPara
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:160px;font-family:Provicali;-inkscape-font-specification:Provicali;fill:#ffffff"
+         id="flowPara16">weasytoon</flowPara></flowRoot>    <flowRoot
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       id="flowRoot18"
+       xml:space="preserve"><flowRegion
+         id="flowRegion20"><rect
+           y="-260.62955"
+           x="-264.65997"
+           height="674.78192"
+           width="1505.1273"
+           id="rect22" /></flowRegion><flowPara
+         id="flowPara24" /></flowRoot>  </g>
+</svg>

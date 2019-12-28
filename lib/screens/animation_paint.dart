@@ -34,6 +34,10 @@ class _AnimationPaintState extends State<AnimationPaint> {
     this.setState(() {});
   }
 
+  double getHeight() {
+    return MediaQuery.of(context).size.height * 0.75;
+  }
+
   @override
   void initState() {
     stateSubscription = servAnimation.stateObservable.listen(_onChange);
@@ -64,7 +68,7 @@ class _AnimationPaintState extends State<AnimationPaint> {
           child: CustomPaint(
             painter: AnimationPainter(servAnimation.currentFrame, 1, true),
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.75,
+              height: this.getHeight(),
               width: MediaQuery.of(context).size.width,
             ),
           ),
