@@ -14,6 +14,7 @@ class Weasytoon extends StatelessWidget {
     final blue      = Color(0xFF22b3EE);
     final blueLight = Color(0xFFCBF0FF);
     final greyBg    = Color(0xFFF3F5F7);
+    final textBlack = Color(0xFF5A8A9D);
 
     final MaterialColor mainBlue = const MaterialColor(
       0xFF22b3EE,
@@ -48,6 +49,7 @@ class Weasytoon extends StatelessWidget {
         ),
         primaryIconTheme: IconThemeData(color: Colors.white),
         scaffoldBackgroundColor: greyBg,
+        textTheme: TextTheme(body1: TextStyle(color: textBlack)),
       ),
       home: AnimationPage(),
     );

@@ -78,6 +78,15 @@ class AnimationService {
     this.currentAnimation.save();
   }
 
+  void selectAnimation(Animation animation) {
+    this.currentAnimation.save();
+
+    this.currentAnimation = animation;
+    this.currentFrame     = animation.frames.last;
+
+    this.change();
+  }
+
   void change() {
     _state.add(1);
   }

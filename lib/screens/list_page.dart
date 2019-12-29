@@ -48,9 +48,20 @@ class _ListPageState extends State<ListPage> {
 
         body: Container(
           decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
-          child: Column(
-            children: <Widget>[
-            ],
+          child: ListView(
+            children: servAnimation.animations.map((animation) {
+              return InkWell(
+                onTap: () {
+                  servAnimation.selectAnimation(animation);
+                },
+                child: Card(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
+                    child: Text(animation.name, style: TextStyle(color: Theme.of(context).primaryColor)),
+                  ),
+                ),
+              );
+            }).toList().cast<Widget>(),
           ),
         ),
       ),

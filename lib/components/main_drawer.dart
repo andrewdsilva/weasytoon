@@ -21,6 +21,13 @@ class _MainDrawerState extends State<MainDrawer> {
     super.initState();
   }
 
+  TextStyle getItemTextStyle() {
+    return TextStyle(
+      fontWeight: FontWeight.normal,
+      color: Theme.of(context).textTheme.body1.color,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -45,7 +52,8 @@ class _MainDrawerState extends State<MainDrawer> {
             ),
           ),
           ListTile(
-            title: Text('Création'),
+            leading: Icon(Icons.brush, color: Theme.of(context).primaryColor),
+            title: Text('Création', style: this.getItemTextStyle()),
             onTap: () {
               Navigator.pop(context);
 
@@ -57,7 +65,8 @@ class _MainDrawerState extends State<MainDrawer> {
             },
           ),
           ListTile(
-            title: Text('Mes animations'),
+            leading: Icon(Icons.collections, color: Theme.of(context).primaryColor),
+            title: Text('Mes animations', style: this.getItemTextStyle()),
             onTap: () {
               Navigator.pop(context);
 
