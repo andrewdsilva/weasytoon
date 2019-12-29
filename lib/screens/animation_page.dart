@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
-import 'animation_paint.dart';
-import 'animation_frames.dart';
-import 'animation_settings.dart';
+import '../components/animation_paint.dart';
+import '../components/animation_frames.dart';
+import '../components/animation_settings.dart';
+import '../components/main_drawer.dart';
+import '../components/main_appbar.dart';
 
 import '../services/animation_service.dart';
 
@@ -22,17 +24,16 @@ class _AnimationPageState extends State<AnimationPage> {
 
   StreamSubscription<int> stateSubscription;
 
-  List<Widget> actions = [];
+  double iconSize = 20.0;
 
-  IconButton makePlayButton() {
+  Widget makePlayButton() {
     return IconButton(
-      iconSize: 20.0,
+      iconSize: this.iconSize,
       icon: Icon(servAnimation.playing ? Icons.stop : Icons.play_arrow),
       color: Colors.white,
       onPressed: () {
         setState(() {
           servAnimation.playing = !servAnimation.playing;
-          this.makeActions();
 
           if (servAnimation.playing) {
             servAnimation.play();
@@ -44,9 +45,9 @@ class _AnimationPageState extends State<AnimationPage> {
     );
   }
 
-  IconButton makeSettingsButton() {
+  Widget makeSettingsButton() {
     return IconButton(
-      iconSize: 20.0,
+      iconSize: this.iconSize,
       icon: Icon(Icons.settings),
       color: Colors.white,
       onPressed: _showDialogSettings,
@@ -60,26 +61,28 @@ class _AnimationPageState extends State<AnimationPage> {
     );
   }
 
-  void makeActions() {
-    this.actions = [
+  List<Widget> makeActions() {
+    return [
       this.makePlayButton(),
       this.makeSettingsButton(),
     ];
   }
 
   void _onChange(int state) {
-    setState(() {
-      this.makeActions();
-    });
+    setState(() {});
   }
 
   @override
   void initState() {
     stateSubscription = servAnimation.stateObservable.listen(_onChange);
 
-    this.makeActions();
-
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    stateSubscription.cancel();
   }
 
   @override
@@ -88,23 +91,15 @@ class _AnimationPageState extends State<AnimationPage> {
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: false,
 
+      drawerEdgeDragWidth: 0.0,
+
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(45.0),
-        child: AppBar(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Image.asset(
-                'assets/images/weasytoon.png',
-                fit: BoxFit.cover,
-                height: 20.0,
-              ),
-            ],
-          ),
-          actions: this.actions,
-          elevation: 0.0,
-        ),
+        child: MainAppBar(this.makeActions),
       ),
+
+      endDrawer: MainDrawer(),
+
       body: Scaffold(
         resizeToAvoidBottomInset: false,
         resizeToAvoidBottomPadding: false,

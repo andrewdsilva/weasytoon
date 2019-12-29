@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import 'dart:ui';
 
 import 'screens/animation_page.dart';
@@ -29,6 +31,10 @@ class Weasytoon extends StatelessWidget {
       },
     );
 
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
+
     return MaterialApp(
       title: 'WeasyToon',
       theme: ThemeData(
@@ -40,6 +46,7 @@ class Weasytoon extends StatelessWidget {
             color: Colors.white
           ),
         ),
+        primaryIconTheme: IconThemeData(color: Colors.white),
         scaffoldBackgroundColor: greyBg,
       ),
       home: AnimationPage(),

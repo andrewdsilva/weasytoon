@@ -64,6 +64,12 @@ class _AnimationFramesState extends State<AnimationFrames> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    stateSubscription.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var frames = servAnimation.currentAnimation != null ? servAnimation.currentAnimation.frames : [];
 

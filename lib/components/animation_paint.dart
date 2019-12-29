@@ -45,6 +45,12 @@ class _AnimationPaintState extends State<AnimationPaint> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    stateSubscription.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(color: Colors.white),
