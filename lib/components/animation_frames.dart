@@ -93,6 +93,7 @@ class _AnimationFramesState extends State<AnimationFrames> {
                       servAnimation.selectFrame(frame);
                     },
                     child: Card(
+                      shape: RoundedRectangleBorder(),
                       child: CustomPaint(
                         painter: AnimationPainter(frame, this.getProportion(), false),
                       ),
@@ -110,6 +111,7 @@ class _AnimationFramesState extends State<AnimationFrames> {
               this.scrollToTheEnd();
             },
             child: Card(
+              shape: RoundedRectangleBorder(),
               child: Padding(
                 padding: EdgeInsets.all(16.0),
                 child: Center(child: Text('+', style: TextStyle(color: Colors.white))),

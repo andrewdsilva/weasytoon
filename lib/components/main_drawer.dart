@@ -68,6 +68,8 @@ class _MainDrawerState extends State<MainDrawer> {
             leading: Icon(Icons.collections, color: Theme.of(context).primaryColor),
             title: Text('Mes animations', style: this.getItemTextStyle()),
             onTap: () {
+              servAnimation.change();
+
               Navigator.pop(context);
 
               Navigator.of(context).pushReplacement(

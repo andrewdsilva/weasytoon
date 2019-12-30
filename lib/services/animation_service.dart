@@ -83,8 +83,20 @@ class AnimationService {
 
     this.currentAnimation = animation;
     this.currentFrame     = animation.frames.last;
+  }
 
-    this.change();
+  Future<Animation> createAnimation(String name) async {
+    var newAnimation = Animation(name);
+    newAnimation.frames.add(Frame());
+
+    this.currentAnimation = newAnimation;
+    this.currentFrame     = newAnimation.frames.last;
+
+    await newAnimation.save();
+
+    this.animations.add(newAnimation);
+
+    return newAnimation;
   }
 
   void change() {

@@ -28,3 +28,15 @@ flutter_icons:
   android: "launcher_icon" 
   ios: true
   image_path: "assets/images/icon.png"
+
+fonts:
+  - family: Open Sans
+    fonts:
+      - asset: assets/fonts/OpenSans-Bold.ttf
+        weight: 700
+      - asset: assets/fonts/OpenSans-ExtraBold.ttf
+        weight: 800
+      - asset: assets/fonts/OpenSans-Light.ttf
+        weight: 300
+      - asset: assets/fonts/OpenSans-Regular.ttf
+        weight: 400

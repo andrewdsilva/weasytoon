@@ -42,8 +42,8 @@ class Animation {
     }).toList().cast<Frame>();
   }
 
-  void save() {
-    servDatabase.insert(this.table, this);
+  void save() async {
+    await servDatabase.insert(this.table, this);
   }
 
 }

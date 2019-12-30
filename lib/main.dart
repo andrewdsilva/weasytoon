@@ -49,7 +49,11 @@ class Weasytoon extends StatelessWidget {
         ),
         primaryIconTheme: IconThemeData(color: Colors.white),
         scaffoldBackgroundColor: greyBg,
-        textTheme: TextTheme(body1: TextStyle(color: textBlack)),
+        textTheme: Theme.of(context).textTheme.apply(
+          fontFamily: 'Open Sans',
+          bodyColor: textBlack,
+          displayColor: textBlack
+        ),
       ),
       home: AnimationPage(),
     );
