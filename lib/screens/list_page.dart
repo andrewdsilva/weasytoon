@@ -24,7 +24,11 @@ class ListPage extends StatefulWidget {
 
 }
 
+enum ListPageMenuItem { delete }
+
 class _ListPageState extends State<ListPage> {
+
+  StreamSubscription<int> stateSubscription;
 
   ShapeBorder getAnimationBorder(Animation animation) {
     if (animation == servAnimation.currentAnimation) {
@@ -63,9 +67,63 @@ class _ListPageState extends State<ListPage> {
     );
   }
 
+  void deleteAnimation(Animation animation) {
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Annuler"),
+      onPressed:  () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Supprimer"),
+      onPressed:  () {
+        servAnimation.deleteAnimation(animation);
+
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Supprimer une animation"),
+      content: Text("Voulez-vous vraiment supprimer cette animation?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void onAction(ListPageMenuItem action, Animation animation) {
+    if (action == ListPageMenuItem.delete) {
+      this.deleteAnimation(animation);
+    }
+  }
+
+  void _onChange(int state) {
+    setState(() {});
+  }
+
   @override
   void initState() {
+    stateSubscription = servAnimation.stateObservable.listen(_onChange);
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    stateSubscription.cancel();
   }
 
   @override
@@ -103,18 +161,37 @@ class _ListPageState extends State<ListPage> {
                 },
                 child: Card(
                   color: this.getAnimationBackground(animation),
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(0, 0, 0, 5.0),
-                          child: Text(animation.name, style: TextStyle(color: Theme.of(context).primaryColor)),
+                  child: Stack(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(0, 0, 0, 5.0),
+                              child: Text(animation.name, style: TextStyle(color: Theme.of(context).primaryColor)),
+                            ),
+                            Text("${animation.frames.length} images", style: TextStyle(color: Colors.grey, fontSize: 12.0)),
+                          ],
                         ),
-                        Text("${animation.frames.length} images", style: TextStyle(color: Colors.grey, fontSize: 12.0)),
-                      ],
-                    ),
+                      ),
+
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: PopupMenuButton<ListPageMenuItem>(
+                          icon: Icon(Icons.more_vert, color: Colors.grey),
+                          onSelected: (ListPageMenuItem result) { setState(() { onAction(result, animation); }); },
+                          itemBuilder: (BuildContext context) => <PopupMenuEntry<ListPageMenuItem>>[
+                            const PopupMenuItem<ListPageMenuItem>(
+                              value: ListPageMenuItem.delete,
+                              child: Text("Supprimer l'animation"),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                   shape: this.getAnimationBorder(animation),
                 ),

@@ -46,4 +46,8 @@ class Animation {
     await servDatabase.insert(this.table, this);
   }
 
+  void delete() async {
+    await servDatabase.delete(this.table, this);
+  }
+
 }

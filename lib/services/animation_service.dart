@@ -99,6 +99,31 @@ class AnimationService {
     return newAnimation;
   }
 
+  void deleteAnimation(Animation animation) async {
+    await animation.delete();
+
+    this.animations.removeWhere((anim) => anim.id == animation.id);
+
+    // No animation
+    if (this.animations.length == 0) {
+      this.animations.add(new Animation("Sans titre 1"));
+
+      this.currentAnimation = this.animations.last;
+
+      // No frame
+      this.currentAnimation.frames.add(new Frame());
+
+      this.currentFrame = this.currentAnimation.frames.last;
+    }
+
+    if (this.currentAnimation.id == animation.id) {
+      this.currentAnimation = this.animations.last;
+      this.currentFrame = this.currentAnimation.frames.last;
+    }
+
+    this.change();
+  }
+
   void change() {
     _state.add(1);
   }

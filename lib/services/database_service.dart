@@ -43,6 +43,14 @@ class DatabaseService {
     print("Saved ${table} ${model.id}.");
   }
 
+  void delete(table, model) async {
+    final Database db = await database;
+
+    await db.rawDelete('DELETE FROM ' + table + ' WHERE id = ?', [model.id]);
+
+    print("Deleted ${table} ${model.id}.");
+  }
+
   Future<List<Map<String, dynamic>>> select(table) async {
     if (this.database == null) {
       await this.initDb();
