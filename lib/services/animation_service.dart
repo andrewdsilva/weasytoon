@@ -124,6 +124,25 @@ class AnimationService {
     this.change();
   }
 
+  void deleteFrame(Frame frame) async {
+    this.currentAnimation.deleteFrame(frame);
+
+    this.currentAnimation.save();
+
+    // No frame
+    if (this.currentAnimation.frames.length == 0) {
+      this.currentAnimation.frames.add(new Frame());
+
+      this.currentFrame = this.currentAnimation.frames.last;
+    }
+
+    if (this.currentFrame == frame) {
+      this.currentFrame = this.currentAnimation.frames.last;
+    }
+
+    this.change();
+  }
+
   void change() {
     _state.add(1);
   }

@@ -16,11 +16,19 @@ class AnimationFrames extends StatefulWidget {
 
 }
 
+enum AnimationFrameMenuItem { delete }
+
 class _AnimationFramesState extends State<AnimationFrames> {
 
   StreamSubscription<int> stateSubscription;
 
   ScrollController _scrollController;
+
+  var _tapPosition;
+
+  void _storePosition(TapDownDetails details) {
+    _tapPosition = details.globalPosition;
+  }
 
   double getProportion() {
     var frameHeight = MediaQuery.of(context).size.height * 0.75;
@@ -53,6 +61,25 @@ class _AnimationFramesState extends State<AnimationFrames> {
       curve: Curves.linear,
       duration: Duration (milliseconds: 500)
     );
+  }
+
+  void showFrameMenu(menuContext, frame) async {
+    final RenderBox overlay = Overlay.of(menuContext).context.findRenderObject();
+
+    final result = await showMenu(
+        context: menuContext,
+        items: [
+          PopupMenuItem(
+            child: Text("Supprimer l'image"),
+            value: AnimationFrameMenuItem.delete,
+          ),
+        ],
+        position: RelativeRect.fromRect(_tapPosition & Size(40, 40), Offset.zero & overlay.size),
+    );
+
+    if (result == AnimationFrameMenuItem.delete) {
+      servAnimation.deleteFrame(frame);
+    }
   }
 
   @override
@@ -89,6 +116,10 @@ class _AnimationFramesState extends State<AnimationFrames> {
                 return SizedBox(
                   width: getItemWidth(),
                   child: InkWell(
+                    onLongPress: () {
+                      this.showFrameMenu(context, frame);
+                    },
+                    onTapDown: _storePosition,
                     onTap: () {
                       servAnimation.selectFrame(frame);
                     },

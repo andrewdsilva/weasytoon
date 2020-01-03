@@ -50,4 +50,8 @@ class Animation {
     await servDatabase.delete(this.table, this);
   }
 
+  void deleteFrame(frame) {
+    this.frames.removeWhere((f) => f == frame);
+  }
+
 }
