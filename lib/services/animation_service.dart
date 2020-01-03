@@ -143,6 +143,17 @@ class AnimationService {
     this.change();
   }
 
+  void copyFrame(Frame frame) async {
+    var newFrame = new Frame();
+    newFrame.initWithValues(this.currentFrame.toMap());
+
+    this.currentAnimation.frames.insert(this.getCurrentFrameIndex() + 1, newFrame);
+
+    this.currentFrame = newFrame;
+
+    this.change();
+  }
+
   void change() {
     _state.add(1);
   }

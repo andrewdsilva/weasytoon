@@ -16,7 +16,7 @@ class AnimationFrames extends StatefulWidget {
 
 }
 
-enum AnimationFrameMenuItem { delete }
+enum AnimationFrameMenuItem { delete, copy }
 
 class _AnimationFramesState extends State<AnimationFrames> {
 
@@ -63,6 +63,14 @@ class _AnimationFramesState extends State<AnimationFrames> {
     );
   }
 
+  void scrollToCurrent() {
+    this._scrollController.animateTo(
+      this._scrollController.offset + getItemWidth() * servAnimation.getCurrentFrameIndex(),
+      curve: Curves.linear,
+      duration: Duration (milliseconds: 500)
+    );
+  }
+
   void showFrameMenu(menuContext, frame) async {
     final RenderBox overlay = Overlay.of(menuContext).context.findRenderObject();
 
@@ -73,12 +81,20 @@ class _AnimationFramesState extends State<AnimationFrames> {
             child: Text("Supprimer l'image"),
             value: AnimationFrameMenuItem.delete,
           ),
+          PopupMenuItem(
+            child: Text("Copier l'image"),
+            value: AnimationFrameMenuItem.copy,
+          ),
         ],
         position: RelativeRect.fromRect(_tapPosition & Size(40, 40), Offset.zero & overlay.size),
     );
 
     if (result == AnimationFrameMenuItem.delete) {
       servAnimation.deleteFrame(frame);
+    } else if (result == AnimationFrameMenuItem.copy) {
+      servAnimation.copyFrame(frame);
+
+      this.scrollToCurrent();
     }
   }
 
