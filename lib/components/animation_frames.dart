@@ -142,7 +142,7 @@ class _AnimationFramesState extends State<AnimationFrames> {
                     child: Card(
                       shape: RoundedRectangleBorder(),
                       child: CustomPaint(
-                        painter: AnimationPainter(frame, this.getProportion(), false),
+                        painter: AnimationPainter(frame, this.getProportion(), false, this.getFrameBackground(frame)),
                       ),
                       color: this.getFrameBackground(frame),
                     ),

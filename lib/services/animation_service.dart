@@ -7,12 +7,15 @@ import 'package:rxdart/rxdart.dart';
 import 'dart:async';
 import 'dart:convert';
 
+enum Tool { brush, eraser }
+
 class AnimationService {
 
   List<Animation> animations = [];
 
   Animation currentAnimation = null;
   Frame currentFrame         = null;
+  Tool tool                  = Tool.brush;
 
   bool playing               = false;
 
@@ -196,6 +199,12 @@ class AnimationService {
 
   void stop() {
     timer?.cancel();
+  }
+
+  void changeTool(Tool tool) {
+    this.tool = tool;
+
+    this.change();
   }
 
 }

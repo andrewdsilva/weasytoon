@@ -45,6 +45,19 @@ class _AnimationPageState extends State<AnimationPage> {
     );
   }
 
+  Widget makeToolButton() {
+    return IconButton(
+      iconSize: this.iconSize,
+      icon: Icon(servAnimation.tool == Tool.brush ? Icons.brush : Icons.trip_origin),
+      color: Colors.white,
+      onPressed: () {
+        setState(() {
+          this._changeTool();
+        });
+      },
+    );
+  }
+
   Widget makeSettingsButton() {
     return IconButton(
       iconSize: this.iconSize,
@@ -61,9 +74,40 @@ class _AnimationPageState extends State<AnimationPage> {
     );
   }
 
+  void _changeTool() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return Container(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.brush),
+                title: Text("Pinceau"),
+                onTap: () {
+                  servAnimation.changeTool(Tool.brush);
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.trip_origin),
+                title: Text("Gomme"),
+                onTap: () {
+                  servAnimation.changeTool(Tool.eraser);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      }
+    );
+  }
+
   List<Widget> makeActions() {
     return [
       this.makePlayButton(),
+      this.makeToolButton(),
       this.makeSettingsButton(),
     ];
   }

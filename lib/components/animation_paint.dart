@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'animation_painter.dart';
 import '../services/animation_service.dart';
+import '../models/dot.dart';
 
 import 'dart:async';
 
@@ -22,8 +23,9 @@ class _AnimationPaintState extends State<AnimationPaint> {
   void addPoint(context, details) {
     final renderObject = context.findRenderObject() as RenderBox;
     final position     = renderObject.globalToLocal(details.globalPosition);
+    final dot          = new Dot(position.dx, position.dy, servAnimation.tool);
 
-    servAnimation.currentFrame.offsets.add(position);
+    servAnimation.currentFrame.offsets.add(dot);
   }
 
   void addNullPoint() {
@@ -72,7 +74,7 @@ class _AnimationPaintState extends State<AnimationPaint> {
         },
         child: Center(
           child: CustomPaint(
-            painter: AnimationPainter(servAnimation.currentFrame, 1, true),
+            painter: AnimationPainter(servAnimation.currentFrame, 1, true, Colors.white),
             child: Container(
               height: this.getHeight(),
               width: MediaQuery.of(context).size.width,

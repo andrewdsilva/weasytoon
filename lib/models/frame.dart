@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../services/animation_service.dart';
+
+import 'dot.dart';
+
 class Frame {
 
-  List<Offset> offsets = [];
+  List<Dot> offsets = [];
 
   Map<String, dynamic> toMap() {
     return {
@@ -13,6 +17,7 @@ class Frame {
           return {
             'x': i.dx,
             'y': i.dy,
+            'type': i.type.toString(),
           };
         }
       }).toList(),
@@ -21,8 +26,12 @@ class Frame {
 
   void initWithValues(Map<String, dynamic> data) {
     this.offsets = data['offsets'].map((i) {
-      return i == null ? null : Offset(i['x'], i['y']);
-    }).toList().cast<Offset>();
+      if (i == null) return null;
+
+      Tool type = Tool.values.firstWhere((e) => e.toString() == i['type']);
+
+      return Dot(i['x'], i['y'], type);
+    }).toList().cast<Dot>();
   }
 
 }
