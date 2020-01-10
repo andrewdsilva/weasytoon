@@ -158,16 +158,26 @@ class _ListPageState extends State<ListPage> {
           var color = offsets[i].type == Tool.brush ? black : white;
           var thickness = offsets[i].type == Tool.brush ? 3 : 6;
 
-          image = ImageLib.drawCircle(
+          image = ImageLib.drawLine(
             image,
             offsets[i].dx.round(),
             offsets[i].dy.round(),
-            thickness,
-            color
+            offsets[i].dx.round(),
+            offsets[i].dy.round(),
+            color,
+            antialias: true,
+            thickness: thickness
           );
 
-
-
+          // for (var j = 1; j <= thickness; j++) {
+          //   image = ImageLib.drawCircle(
+          //     image,
+          //     offsets[i].dx.round(),
+          //     offsets[i].dy.round(),
+          //     j,
+          //     color
+          //   );
+          // }
 
           // var paintTool = offsets[i].type == Tool.brush ? paint : eraser;
 
