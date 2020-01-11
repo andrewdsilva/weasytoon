@@ -3,6 +3,7 @@ import 'package:image/image.dart' as ImageLib;
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:open_file/open_file.dart';
 
 import 'dart:ui';
 import 'dart:io';
@@ -130,7 +131,21 @@ class _ListPageState extends State<ListPage> {
     return image;
   }
 
+  void startLoader() async {
+    await showDialog<String>(
+      context: context,
+      child: AlertDialog(
+        contentPadding: const EdgeInsets.all(16.0),
+        content: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
+
   void saveAnimation(Animation animation, BuildContext theContext) async {
+    this.startLoader();
+
     final PermissionHandler _permissionHandler = PermissionHandler();
     var result = await _permissionHandler.requestPermissions([PermissionGroup.storage]);
 
@@ -169,9 +184,14 @@ class _ListPageState extends State<ListPage> {
       final File file = File(newPath);
       final File newImage = await file.writeAsBytes(Uint8List.fromList(gif), mode: FileMode.write, flush: true);
 
+      // Stop spinner
+      Navigator.pop(context);
+
       Scaffold.of(theContext).showSnackBar(SnackBar(
         content: Text("Animation exportée dans la galerie du téléphone."),
       ));
+
+      OpenFile.open(newPath);
     }
   }
 
