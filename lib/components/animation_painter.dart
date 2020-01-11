@@ -54,8 +54,16 @@ class AnimationPainter extends CustomPainter {
     return eraser;
   }
 
-  void drawOffsets(canvas, offsets, paint) {
+  void drawOffsets(canvas, offsets, paint, size, bool drawBg) {
     var eraser = this.getEraser();
+
+    if (drawBg) {
+      var bg = Paint()
+        ..color = this.background
+        ..style = PaintingStyle.fill;
+
+      canvas.drawRect(Rect.fromPoints(Offset(0, 0), Offset(size.width, size.height)), bg);
+    }
 
     for (var i = 0; i < offsets.length - 1; i++) {
       if (offsets[i] != null && offsets[i + 1] != null) {
@@ -88,12 +96,12 @@ class AnimationPainter extends CustomPainter {
     var pf = servAnimation.getPreviousFrame();
 
     if (this.onion && !servAnimation.playing && pf != null) {
-      this.drawOffsets(canvas, pf.offsets, paint);
+      this.drawOffsets(canvas, pf.offsets, paint, size, true);
     }
 
     paint.color = Colors.black;
     var offsets = this.frame != null ? this.frame.offsets : [];
-    this.drawOffsets(canvas, offsets, paint);
+    this.drawOffsets(canvas, offsets, paint, size, !this.onion);
   }
 
   @override

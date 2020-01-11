@@ -9,6 +9,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import '../components/animation_paint.dart';
+import '../components/animation_painter.dart';
 import '../components/animation_frames.dart';
 import '../components/new_animation.dart';
 import '../components/main_drawer.dart';
@@ -112,6 +113,23 @@ class _ListPageState extends State<ListPage> {
     );
   }
 
+  Future<ImageLib.Image> getImage(Frame frame, size) async {
+    final PictureRecorder recorder = PictureRecorder();
+
+    AnimationPainter myPainter = AnimationPainter(frame, 1, false, Colors.white);
+    myPainter.paint(Canvas(recorder), size);
+
+    final Picture picture = recorder.endRecording();
+
+    var dartUiImage = await picture.toImage(size.width.round(), size.height.round());
+    var byteData = await dartUiImage.toByteData();
+
+    var bytes = byteData.buffer.asInt8List();
+    var image = await ImageLib.Image.fromBytes(size.width.round(), size.height.round(), bytes);
+
+    return image;
+  }
+
   void saveAnimation(Animation animation, BuildContext theContext) async {
     final PermissionHandler _permissionHandler = PermissionHandler();
     var result = await _permissionHandler.requestPermissions([PermissionGroup.storage]);
@@ -129,81 +147,13 @@ class _ListPageState extends State<ListPage> {
 
       encoder.delay = delay;
 
-    for (var i = 0; i < animation.frames.length; i++) {
-      Frame frame = animation.frames[i];
-      var image   = ImageLib.Image(width, height);
-      var white   = ImageLib.Color.fromRgb(255, 255, 255);
-      var black   = ImageLib.Color.fromRgb(0, 0, 0);
+      for (var i = 0; i < animation.frames.length; i++) {
+        Frame frame = animation.frames[i];
 
-      image.fill(white);
+        var image = await getImage(frame, Size(width / 1, height / 1));
 
-      List<Dot> offsets = frame.offsets;
-
-      for (var i = 0; i < offsets.length - 1; i++) {
-        if (offsets[i] != null && offsets[i + 1] != null) {
-          var color = offsets[i].type == Tool.brush ? black : white;
-          var thickness = offsets[i].type == Tool.brush ? 3 : 6;
-
-          image = ImageLib.drawLine(
-            image,
-            offsets[i].dx.round(),
-            offsets[i].dy.round(),
-            offsets[i + 1].dx.round(),
-            offsets[i + 1].dy.round(),
-            color,
-            antialias: true,
-            thickness: thickness
-          );
-        } else if (offsets[i] != null && offsets[i + 1] == null) {
-          var color = offsets[i].type == Tool.brush ? black : white;
-          var thickness = offsets[i].type == Tool.brush ? 3 : 6;
-
-          image = ImageLib.drawLine(
-            image,
-            offsets[i].dx.round(),
-            offsets[i].dy.round(),
-            offsets[i].dx.round(),
-            offsets[i].dy.round(),
-            color,
-            antialias: true,
-            thickness: thickness
-          );
-
-          // for (var j = 1; j <= thickness; j++) {
-          //   image = ImageLib.drawCircle(
-          //     image,
-          //     offsets[i].dx.round(),
-          //     offsets[i].dy.round(),
-          //     j,
-          //     color
-          //   );
-          // }
-
-          // var paintTool = offsets[i].type == Tool.brush ? paint : eraser;
-
-          // canvas.drawPoints(
-          //   PointMode.points,
-          //   [this.adaptOffset(offsets[i])],
-          //   paintTool
-          // );
-        }
+        encoder.addFrame(image, duration: delay);
       }
-
-      encoder.addFrame(image, duration: delay);
-    }
-
-
-      // var image = ImageLib.Image(width, height);
-      // imageAnimation.addFrame(image);
-
-      // var image2 = ImageLib.Image(width, height);
-      // var color = ImageLib.Color.fromRgb(255, 255, 255);
-
-      // image2.fill(color);
-      // imageAnimation.addFrame(image2);
-
-      // encoder.addFrame(image, duration: delay);
-      // encoder.addFrame(image2, duration: delay);
 
       final gif = encoder.finish();
 
