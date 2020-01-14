@@ -150,27 +150,31 @@ class _ListPageState extends State<ListPage> {
     var result = await _permissionHandler.requestPermissions([PermissionGroup.storage]);
 
     if (result[PermissionGroup.storage] == PermissionStatus.granted) {
-      var imageAnimation = ImageLib.Animation();
-
       var width  = (MediaQuery.of(context).size.width).round();
       var height = (MediaQuery.of(context).size.height * 0.75).round();
 
       var delay = (100 / animation.fps).round();
 
       final encoder = ImageLib.GifEncoder();
-      encoder.repeat = 0;
+      encoder.repeat = 1;
 
       encoder.delay = delay;
+
+      final anim = ImageLib.Animation();
+      anim.loopCount = 0;
 
       for (var i = 0; i < animation.frames.length; i++) {
         Frame frame = animation.frames[i];
 
         var image = await getImage(frame, Size(width / 1, height / 1));
 
-        encoder.addFrame(image, duration: delay);
+        // encoder.addFrame(image, duration: delay);
+        image.duration = delay;
+        anim.addFrame(image);
       }
 
-      final gif = encoder.finish();
+      // final gif = encoder.finish();
+      final gif = encoder.encodeAnimation(anim);
 
       var fileName = DateTime.now().millisecondsSinceEpoch.toString();
 
