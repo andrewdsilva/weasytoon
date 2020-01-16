@@ -163,6 +163,8 @@ class _ListPageState extends State<ListPage> {
       final anim = ImageLib.Animation();
       anim.loopCount = 0;
 
+      var t0 = new DateTime.now().millisecondsSinceEpoch;
+
       for (var i = 0; i < animation.frames.length; i++) {
         Frame frame = animation.frames[i];
 
@@ -173,10 +175,36 @@ class _ListPageState extends State<ListPage> {
         anim.addFrame(image);
       }
 
+      var t1 = new DateTime.now().millisecondsSinceEpoch;
+
+      print("Frames generation " + ((t1 - t0) / 1000).toString() + "s");
+
       // final gif = encoder.finish();
-      final gif = encoder.encodeAnimation(anim);
+
+      // final gif = encoder.encodeAnimation(anim);
+      encoder.repeat = anim.loopCount;
+      for (ImageLib.Image f in anim) {
+        var t00 = new DateTime.now().millisecondsSinceEpoch;
+
+        // this.addFrame(encoder, f);
+        encoder.addFrame(f, duration: f.duration);
+
+        print("Frame added " + (((new DateTime.now().millisecondsSinceEpoch) - t00) / 1000).toString() + "s");
+      }
+
+      var t2 = new DateTime.now().millisecondsSinceEpoch;
+
+      print("Animation created " + ((t2 - t0) / 1000).toString() + "s");
+
+      final gif = encoder.finish();
+
+      var t3 = new DateTime.now().millisecondsSinceEpoch;
+
+      print("Animation encoded " + ((t3 - t0) / 1000).toString() + "s");
 
       var fileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+      print("Get storage paths");
 
       final Directory path = await getApplicationDocumentsDirectory();
       final List<Directory> pictures = await getExternalStorageDirectories(type: StorageDirectory.pictures);
@@ -187,6 +215,8 @@ class _ListPageState extends State<ListPage> {
 
       final File file = File(newPath);
       final File newImage = await file.writeAsBytes(Uint8List.fromList(gif), mode: FileMode.write, flush: true);
+
+      print("Saved");
 
       // Stop spinner
       Navigator.pop(context);

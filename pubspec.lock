@@ -82,12 +82,14 @@ packages:
     source: sdk
     version: "0.0.0"
   image:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: image
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.4"
+      path: "."
+      ref: "10504002bd8d62f79b77593ddbb537e25b0d29fa"
+      resolved-ref: "10504002bd8d62f79b77593ddbb537e25b0d29fa"
+      url: "https://github.com/brendan-duncan/image"
+    source: git
+    version: "2.1.5"
   image_gallery_saver:
     dependency: "direct main"
     description:
